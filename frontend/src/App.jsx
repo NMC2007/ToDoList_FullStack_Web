@@ -1,12 +1,10 @@
-import { Toaster, toast } from "sonner"
-import { BrowserRouter, Routes, Route } from "react-router"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 import HomePage from "./page/HomePage"
 import Notfound from "./page/Notfound"
 
 function App() {
   return (
     <>
-      <Toaster />
       <BrowserRouter>
 
         <Routes>
