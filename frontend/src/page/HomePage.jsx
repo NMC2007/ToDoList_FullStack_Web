@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import AddTask from "@/components/AddTask";
 import StatsAndFilters from "@/components/StatsAndFilters";
@@ -7,7 +7,30 @@ import DateTimeFilter from "@/components/DateTimeFilter";
 import TaskList from "@/components/TaskList";
 import Footer from "@/components/Footer";
 
+import axios from "axios";
+
 const HomePage = () => {
+  const [taskBuffer, setTaskBuffer] = useState([])
+
+  useEffect(() => {
+    fethTasks();
+  }, [])
+
+
+  const fethTasks = async () => {
+    try {
+      const res = await axios.get("http://localhost:4321/api/tasks");
+      const tasks = res.data;
+
+      console.log("Fetched tasks:", tasks);
+      setTaskBuffer(tasks);
+
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  }
+
+
   return (
     <div className="min-h-screen w-full relative">
       {/* Peachy Mint Dream Gradient */}
@@ -25,7 +48,7 @@ const HomePage = () => {
 
           <StatsAndFilters />
 
-          <TaskList />
+          <TaskList filteredTasks={taskBuffer} />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />
