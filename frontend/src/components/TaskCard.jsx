@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const TaskCard = ({ task, index }) => {
-  console.log(task.status);
   let isEditing = false;
   return (
     <Card

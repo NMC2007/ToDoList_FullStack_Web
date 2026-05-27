@@ -10,12 +10,20 @@ import Footer from "@/components/Footer";
 import axios from "axios";
 
 const HomePage = () => {
+
+  // state
   const [taskBuffer, setTaskBuffer] = useState([])
 
+  const [activeTasksCount, setActiveTasksCount] = useState(0);
+  const [completedTasksCount, setCompletedTasksCount] = useState(0);
+
+  const [filter, setFilter] = useState("all");
+
+
+  // call api
   useEffect(() => {
     fethTasks();
   }, [])
-
 
   const fethTasks = async () => {
     try {
@@ -23,7 +31,9 @@ const HomePage = () => {
       const tasks = res.data;
 
       console.log("Fetched tasks:", tasks);
-      setTaskBuffer(tasks);
+      setTaskBuffer(tasks.tasks);
+      setActiveTasksCount(tasks.activeCount);
+      setCompletedTasksCount(tasks.completedCount);
 
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -31,6 +41,21 @@ const HomePage = () => {
   }
 
 
+  // kiểm tra fillter xem tiêu trí lọc là gì
+  // nếu là all thì trả về tất cả còn lại thì trả về theo tiêu trí
+  const filterTasks = taskBuffer.filter((tasks) => {
+    switch(filter) {
+      case "active":
+        return tasks.status === "active"
+      case "completed":
+        return tasks.status === "completed"
+      default:
+        return true
+    }
+  });
+
+  
+  // component
   return (
     <div className="min-h-screen w-full relative">
       {/* Peachy Mint Dream Gradient */}
@@ -46,16 +71,24 @@ const HomePage = () => {
 
           <AddTask />
 
-          <StatsAndFilters />
+          <StatsAndFilters
+            activeTasksCount={activeTasksCount}
+            completedTasksCount={completedTasksCount}
+            setFilter={setFilter}
+            filter={filter}
+          />
 
-          <TaskList filteredTasks={taskBuffer} />
+          <TaskList filteredTasks={filterTasks} filter={filter} />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />
             <DateTimeFilter />
           </div>
 
-          <Footer />
+          <Footer
+            completedTaskCount={completedTasksCount}
+            activeTaskCount={activeTasksCount}
+          />
         </div>
       </div>
     </div>
