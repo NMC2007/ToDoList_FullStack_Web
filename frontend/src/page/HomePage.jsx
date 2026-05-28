@@ -7,7 +7,7 @@ import DateTimeFilter from "@/components/DateTimeFilter";
 import TaskList from "@/components/TaskList";
 import Footer from "@/components/Footer";
 
-import axios from "axios";
+import api from "@/lib/axios";
 
 const HomePage = () => {
 
@@ -27,7 +27,7 @@ const HomePage = () => {
 
   const fethTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:4321/api/tasks");
+      const res = await api.get("/tasks");
       const tasks = res.data;
 
       console.log("Fetched tasks:", tasks);
@@ -39,7 +39,6 @@ const HomePage = () => {
       console.error("Error fetching tasks:", error);
     }
   }
-
 
   // kiểm tra fillter xem tiêu trí lọc là gì
   // nếu là all thì trả về tất cả còn lại thì trả về theo tiêu trí
@@ -54,7 +53,11 @@ const HomePage = () => {
     }
   });
 
-  
+// re render khi task có sự thay đổi
+  const handleTaskChange = () => {
+    fethTasks();
+  }
+
   // component
   return (
     <div className="min-h-screen w-full relative">
@@ -69,7 +72,7 @@ const HomePage = () => {
         <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
           <Header />
 
-          <AddTask />
+          <AddTask handleAddTask = {handleTaskChange} />
 
           <StatsAndFilters
             activeTasksCount={activeTasksCount}
