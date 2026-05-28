@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import api from "@/lib/axios";
 
-const AddTask = ( {handleAddTask = () => {}}) => {
+const AddTask = ( {handleTaskChange = () => {}}) => {
   const [newTaskTitle, setTewTaskTitle] = useState("")
 
   // gửi request
@@ -21,7 +21,7 @@ const AddTask = ( {handleAddTask = () => {}}) => {
 
         // gọi đến hàm ở component cha yêu cầu re render để lấy dữ liệu mới
         // khi thêm task
-        handleAddTask()
+        handleTaskChange()
 
       } catch (error) {
         console.error(error)
@@ -59,6 +59,7 @@ const AddTask = ( {handleAddTask = () => {}}) => {
           size="xl"
           className="px-6 items-center justify-between"
           onClick = {addTask}
+          disabled = {!newTaskTitle.trim()}
         >
           <Plus className="size-5" />
           Thêm

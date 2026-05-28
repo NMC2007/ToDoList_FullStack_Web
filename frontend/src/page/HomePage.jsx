@@ -72,7 +72,7 @@ const HomePage = () => {
         <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
           <Header />
 
-          <AddTask handleAddTask = {handleTaskChange} />
+          <AddTask handleTaskChange={handleTaskChange} />
 
           <StatsAndFilters
             activeTasksCount={activeTasksCount}
@@ -81,7 +81,11 @@ const HomePage = () => {
             filter={filter}
           />
 
-          <TaskList filteredTasks={filterTasks} filter={filter} />
+          <TaskList
+            filteredTasks={filterTasks}
+            filter={filter}
+            handleTaskChange={handleTaskChange}
+          />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />

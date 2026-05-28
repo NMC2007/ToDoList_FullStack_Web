@@ -10,9 +10,25 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import api from "@/lib/axios";
 
-const TaskCard = ({ task, index }) => {
+const TaskCard = ({ task, index, handleTaskChange = () => {} }) => {
   let isEditing = false;
+
+  const deleteTask = async (taskId) => {
+    try {
+      await api.delete(`/tasks/${taskId}`)
+      
+      toast.success(`Nhiệm vụ được xoá thành công`)
+
+      handleTaskChange()
+    } catch (error) {
+      console.error(error)
+      toast.error("Lỗi sảy ra khi thêm nhiệm vụ")
+    }
+  }
+
   return (
     <Card
       className={cn(
@@ -89,6 +105,7 @@ const TaskCard = ({ task, index }) => {
             variant="ghost"
             size="icon"
             className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-destructive"
+            onClick = {() => deleteTask(task._id)}
           >
             <Trash2 />
           </Button>
