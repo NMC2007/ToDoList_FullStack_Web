@@ -55,14 +55,14 @@ const TaskCard = ({ task, index, handleTaskChange = () => {} }) => {
       if (task.status === 'active') {
         await api.put(`/tasks/${task._id}`, {
           status: 'completed',
-          completeAt: new Date().toISOString()
+          completedAt: new Date().toISOString()
         })
         toast.success(`Nhiệm vụ được đã hoàn thành`)
 
       } else {
         await api.put(`/tasks/${task._id}`, {
           status: 'active',
-          completeAt: null
+          completedAt: null
         })
         toast.success(`Nhiệm vụ được chưa hoàn thành`)
       }
@@ -140,12 +140,12 @@ const TaskCard = ({ task, index, handleTaskChange = () => {} }) => {
             <span className="text-xs text-muted-foreground">
               {new Date(task.createdAt).toLocaleString()}
             </span>
-            {task.completeAt && (
+            {task.completedAt && (
               <>
                 <span className="text-xs text-muted-foreground"> - </span>
                 <Calendar className="size-3 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground">
-                  {new Date(task.completeAt).toLocaleString()}
+                  {new Date(task.completedAt).toLocaleString()}
                 </span>
               </>
             )}
