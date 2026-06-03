@@ -8,6 +8,7 @@ import TaskList from "@/components/TaskList";
 import Footer from "@/components/Footer";
 
 import api from "@/lib/axios";
+import { visibleTaskLimit } from "@/lib/data";
 
 const HomePage = () => {
 
@@ -18,16 +19,25 @@ const HomePage = () => {
   const [completedTasksCount, setCompletedTasksCount] = useState(0);
 
   const [filter, setFilter] = useState("all");
+  const [dateQuery, setDateQuery] = useState("all");
+
+  const [page, setPage] = useState(1);
 
 
   // call api
   useEffect(() => {
+    setPage(1);
     fethTasks();
-  }, [])
+  }, [dateQuery])
+
+  // reset page khi thay đổi filter status
+  useEffect(() => {
+    setPage(1);
+  }, [filter])
 
   const fethTasks = async () => {
     try {
-      const res = await api.get("/tasks");
+      const res = await api.get(`/tasks?filter=${dateQuery}`);
       const tasks = res.data;
 
       console.log("Fetched tasks:", tasks);
@@ -52,6 +62,13 @@ const HomePage = () => {
         return true
     }
   });
+
+  // Tính toán phân trang
+  const totalPages = Math.ceil(filterTasks.length / visibleTaskLimit);
+  const paginatedTasks = filterTasks.slice(
+    (page - 1) * visibleTaskLimit,
+    page * visibleTaskLimit
+  );
 
 // re render khi task có sự thay đổi
   const handleTaskChange = () => {
@@ -82,14 +99,18 @@ const HomePage = () => {
           />
 
           <TaskList
-            filteredTasks={filterTasks}
+            filteredTasks={paginatedTasks}
             filter={filter}
             handleTaskChange={handleTaskChange}
           />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <TaskListPagination />
-            <DateTimeFilter />
+            <TaskListPagination 
+              page={page}
+              totalPages={totalPages}
+              setPage={setPage}
+            />
+            <DateTimeFilter dateQuery = {dateQuery} setDateQuery = {setDateQuery} />
           </div>
 
           <Footer
