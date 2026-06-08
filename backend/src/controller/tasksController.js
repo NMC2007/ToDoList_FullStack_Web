@@ -1,4 +1,4 @@
-import { act } from "react";
+import { react } from "react";
 import Task from "../models/Task.js"
 
 export const getAllTasks = async (req, res) => {
